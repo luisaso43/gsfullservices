@@ -1,6 +1,7 @@
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setIsSubmitting(true);
+  setSubmitStatus('');
 
   try {
     const response = await fetch('https://formspree.io/f/xldnzqen', {
@@ -12,19 +13,23 @@ const handleSubmit = async (e: React.FormEvent) => {
       body: JSON.stringify(formData),
     });
 
-    const result = await response.json();
-
     if (response.ok) {
-      setSubmitStatus('¡Gracias por contactarnos! Te responderemos pronto.');
+      setSubmitStatus('✅ ¡Mensaje enviado correctamente!');
       setFormData({ name: '', email: '', phone: '', service: '', message: '' });
     } else {
-      const errorMessage = result?.errors?.[0]?.message || 'Hubo un problema. Intenta de nuevo.';
-      setSubmitStatus(errorMessage);
+      const data = await response.json();
+      const error = data?.errors?.[0]?.message || '❌ Hubo un problema al enviar el mensaje.';
+      setSubmitStatus(error);
     }
   } catch (error) {
-    console.error('Error al enviar:', error);
-    setSubmitStatus('Ocurrió un error inesperado. Intenta de nuevo.');
+    console.error(error);
+    setSubmitStatus('❌ Ocurrió un error inesperado. Intenta de nuevo.');
   }
 
   setIsSubmitting(false);
+
+  // Ocultar mensaje después de 5 segundos
+  setTimeout(() => {
+    setSubmitStatus('');
+  }, 5000);
 };
