@@ -19,7 +19,7 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('https://readdy.ai/api/form-submit', {
+      const response = await fetch('https://formspree.io/f/xldnzqen', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
