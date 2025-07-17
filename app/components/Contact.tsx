@@ -1,4 +1,3 @@
-
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setIsSubmitting(true);
@@ -10,13 +9,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        service: formData.service,
-        message: formData.message
-      })
+      body: JSON.stringify(formData),
     });
 
     const result = await response.json();
@@ -25,11 +18,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       setSubmitStatus('¡Gracias por contactarnos! Te responderemos pronto.');
       setFormData({ name: '', email: '', phone: '', service: '', message: '' });
     } else {
-      const errorMessage = result?.errors?.[0]?.message || 'Error al enviar el mensaje. Inténtalo de nuevo.';
+      const errorMessage = result?.errors?.[0]?.message || 'Hubo un problema. Intenta de nuevo.';
       setSubmitStatus(errorMessage);
     }
   } catch (error) {
-    setSubmitStatus('Error al enviar el mensaje. Inténtalo de nuevo.');
+    console.error('Error al enviar:', error);
+    setSubmitStatus('Ocurrió un error inesperado. Intenta de nuevo.');
   }
 
   setIsSubmitting(false);
